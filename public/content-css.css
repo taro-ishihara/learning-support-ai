@@ -1,0 +1,11 @@
+.aidext {
+  position: relative;
+  cursor: pointer;
+}
+
+.aidext.star:hover::after {
+  display: inline-block;
+  z-index: 9999;
+  content: "⭐️";
+  position: absolute;
+}
