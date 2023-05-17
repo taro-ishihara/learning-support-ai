@@ -54,7 +54,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   switch (request.message) {
     case "getSelected":
       const selection = window.getSelection();
-      if(selection.toString()){
+      if (selection.toString()) {
         sendResponse({
           ok: true,
           word: selection.toString().toLowerCase(),
@@ -77,6 +77,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         );
       }
       break;
+    case "showAlert":
+      alert(request.payload);
+      break;
     default:
       // 未知のメッセージに対するデフォルトの処理
       break;
@@ -85,7 +88,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 window.addEventListener("load", async () => {
   const items = await chrome.storage.sync.get(null);
-  delete items.openAiApiKey // APIキーは対象外
+  delete items.openAiApiKey;
   for (const word in items) {
     const targetNodes = [...getTargetNodes(word)];
     for (const node of targetNodes) {

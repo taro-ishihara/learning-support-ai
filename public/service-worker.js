@@ -4,7 +4,7 @@ const createPrompt = (word, context) => {
 
 let isProcessing = false;
 const startProcessing = () => {
-  isProcessing = true
+  isProcessing = true;
   const details = {};
   details.path = { 16: "icons/iconred16.png", 32: "icons/iconred32.png" };
   chrome.action.setIcon(details);
@@ -28,6 +28,10 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   switch (info.menuItemId) {
     case "search":
       if (isProcessing) {
+        chrome.tabs.sendMessage(tab.id, {
+          message: "showAlert",
+          payload: "言語学習サポートAI: 既に別の検索中です。「AI」アイコンが赤くなっている間は検索を控えてください。",
+        });
         break;
       }
       startProcessing(tab.id);
@@ -39,8 +43,12 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
         tab.id,
         { message: "getSelected" },
         (selected) => {
-          if(!selected.ok){
-            return
+          if (!selected || !selected.ok) {
+            chrome.tabs.sendMessage(tab.id, {
+              message: "showAlert",
+              payload: "言語学習サポートAI: 文字選択に失敗しました。やりなおしても解決しない場合は、使い方ページ（Github）から使用したサイトのURLと共に問題を報告してください。",
+            });
+            return;
           }
           fetch(apiUrl, {
             method: "POST",
@@ -73,7 +81,10 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
                     },
                   });
                 } else {
-                  console.error("レスポンスが不正です。", jsonData);
+                  chrome.tabs.sendMessage(tab.id, {
+                    message: "showAlert",
+                    payload: "言語学習サポートAI: OpenAI APIからのレスポンスが不正です。API Keyが設定されているか、有効期限が切れていないかどうか確認してください。",
+                  });
                 }
               });
             })

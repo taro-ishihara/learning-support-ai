@@ -2,6 +2,7 @@ import { useState, ChangeEvent, useEffect } from "react";
 import { debounce } from "lodash";
 import { exportToQuizlet } from "./export-to-quizlet";
 import {
+  Link,
   Text,
   Box,
   Heading,
@@ -85,6 +86,9 @@ function App() {
     <div className="App">
       <Box m={4}>
         <Heading>言語学習サポートAI</Heading>
+        <Link href="https://github.com/taro-ishihara/learning-support-ai#readme" isExternal>
+          使い方（外部サイト）
+        </Link>
         <InputGroup mt={2} size="md">
           <Input
             pr="4.5rem"
